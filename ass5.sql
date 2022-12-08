@@ -68,6 +68,8 @@ WHERE stu_address = 'KOLKATA';
 
 execute sp_helpindex student;
 execute sp_helpindex department;
+execute sp_helpindex studept;
+
 
 drop index ncls_inc_stu on student;
 
@@ -79,19 +81,25 @@ CREATE NONCLUSTERED INDEX ncls_inc_stu ON student(stu_name asc,stu_address asc)
 include(email,phone)
 WHERE stu_address = 'KOLKATA';
 
-select * from studept;
+
+
 
 select * from STUDENT;
 go
-create view studept as select student_id, stu_name, deptname
-from student inner join DEPARTMENT
-on STUDENT.DeptId = DEPARTMENT.DeptId
-where DeptName = 'cse';
+create view studept with schemabinding 
+as select student_id, stu_name, deptname
+from dbo.student inner join dbo.DEPARTMENT
+on student.DeptId = DEPARTMENT.DeptId
 go
+
+select * from studept
+where DeptName = 'cse';
+
 DROP view studept;
 
+CREATE UNIQUE CLUSTERED INDEX cls_studep on studept(student_id);
 
-
+CREATE NONCLUSTERED INDEX ncls_studept ON studept(DeptName);
 
 --DROP TABLE STUDENT;
 --DROP TABLE DEPARTMENT;
